@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Medium2 implements ActionListener {
+public class Project implements ActionListener {
     private JFrame mainFrame;
     private JLabel statusLabel;
     private JPanel controlPanel;
@@ -17,19 +17,19 @@ public class Medium2 implements ActionListener {
     private int HEIGHT=700;
 
 
-    public Medium2() {
+    public Project() {
         prepareGUI();
     }
 
     public static void main(String[] args) {
-        Medium2 medium2 = new Medium2();
-        medium2.showMedium2();
+        Project project = new Project();
+        project.showProject();
     }
 
     private void prepareGUI() {
-        mainFrame = new JFrame("Example with Grid inside BorderLayout");
+        mainFrame = new JFrame("Project Layout");
         mainFrame.setSize(WIDTH, HEIGHT);
-        mainFrame.setLayout(new GridLayout(3, 3));
+        mainFrame.setLayout(new BorderLayout(3, 3));
 
         //menu at top
         cut = new JMenuItem("cut");
@@ -62,38 +62,36 @@ public class Medium2 implements ActionListener {
             }
         });
         controlPanel = new JPanel();
-        controlPanel.setLayout(new BorderLayout(3,3)); //set the layout of the panel
+        controlPanel.setLayout(new GridLayout(1,2)); //set the layout of the panel
 
         mainFrame.add(controlPanel);
 
         mainFrame.setVisible(true);
     }
 
-    private void showMedium2() {
+    private void showProject() {
 
-        //JLabel label = new JLabel("label", JLabel.WEST);
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
-        JButton button3 = new JButton("Button 3");
+//        JLabel label1 = new JLabel("label 1", JLabel.CENTER);
+//        JLabel label2 = new JLabel("label 2", JLabel.CENTER);
+        JButton button1 = new JButton("URL: ");
+        JButton button3 = new JButton("Search: ");
+        JButton button4 = new JButton("Start! ");
+        JTextArea textArea1 = new JTextArea("Links: ");
+        JTextArea textArea2 = new JTextArea("URL");
 
-        button1.setActionCommand("Button 1");
-        button2.setActionCommand("Button 2");
-        button3.setActionCommand("Button 3");
+        button4.setActionCommand("Button 4");
+
 
         // labels don't need ActionCommand or ActionListener
-        button1.addActionListener(new ButtonClickListener());
-        button2.addActionListener(new ButtonClickListener());
-        button3.addActionListener(new ButtonClickListener());
+        button4.addActionListener(new ButtonClickListener());
 
-        mainFrame.add(button1);
-        mainFrame.add(button2);
-        mainFrame.add(button3);
-
-        // then add the borderLayout inside the middle square
-        //controlPanel.add(label); //label
-//        mainFrame.add(button1, BorderLayout.NORTH);
-//        mainFrame.add(button3, BorderLayout.SOUTH);
-        //then the rest of the buttons
+        controlPanel.add(textArea2);
+        //controlPanel.add(label1); //label
+        controlPanel.add(button4);
+        mainFrame.add(button1, BorderLayout.NORTH);
+        mainFrame.add(button3, BorderLayout.SOUTH);
+       // controlPanel.add(label2); //label
+        controlPanel.add(textArea1);
 
         mainFrame.setVisible(true);
     }
