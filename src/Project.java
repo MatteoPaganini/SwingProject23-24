@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class Project implements ActionListener {
     private JFrame mainFrame;
@@ -15,6 +18,9 @@ public class Project implements ActionListener {
     private JTextArea ta; //typing area
     private int WIDTH=800;
     private int HEIGHT=700;
+    private JTextArea textArea1;
+    private JTextArea textArea2;
+    private JTextArea textArea3;
 
 
     public Project() {
@@ -71,27 +77,25 @@ public class Project implements ActionListener {
 
     private void showProject() {
 
-//        JLabel label1 = new JLabel("label 1", JLabel.CENTER);
-//        JLabel label2 = new JLabel("label 2", JLabel.CENTER);
-        JButton button1 = new JButton("URL: ");
-        JButton button3 = new JButton("Search: ");
+        //defining new buttons and text areas
         JButton button4 = new JButton("Start! ");
-        JTextArea textArea1 = new JTextArea("Links: ");
-        JTextArea textArea2 = new JTextArea("URL");
+        textArea1 = new JTextArea("Search term: ");
+        textArea2 = new JTextArea("Links: ");
+        textArea3 = new JTextArea("URL: ");
 
         button4.setActionCommand("Button 4");
 
 
-        // labels don't need ActionCommand or ActionListener
+        // labels don't need ActionCommand or ActionListener... buttons do
         button4.addActionListener(new ButtonClickListener());
 
-        controlPanel.add(textArea2);
-        //controlPanel.add(label1); //label
+        //control panel is the grid layout
+        //mainFrame is the broder layout
+        //add functions to CP and MF
+        controlPanel.add(textArea3);
         controlPanel.add(button4);
-        mainFrame.add(button1, BorderLayout.NORTH);
-        mainFrame.add(button3, BorderLayout.SOUTH);
-       // controlPanel.add(label2); //label
-        controlPanel.add(textArea1);
+        mainFrame.add(textArea1, BorderLayout.NORTH);
+        controlPanel.add(textArea2);
 
         mainFrame.setVisible(true);
     }
@@ -112,14 +116,61 @@ public class Project implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
 
-            if (command.equals("Button 1")) {
-                statusLabel.setText("Button 1 clicked.");
-            } else if (command.equals("Button 2")) {
-                statusLabel.setText("Button 2 clicked.");
-            } else {
-                statusLabel.setText("Cancel Button clicked.");
+            if (command.equals("Button 4")) { //start button is clicked
+                System.out.println("Starting ");
+
+                //html reader code
+
+                    try {
+                        System.out.println();
+                        System.out.print("hello \n");
+                        URL url = new URL("https://www.milton.edu/");
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(url.openStream())
+                        );
+                        String line;
+                        while ( (line = reader.readLine()) != null ) {
+
+                            if((line.contains("href=")))  {
+                                //   System.out.println("og line: " + line);
+
+                                //methods needed: indexof, substring
+                                int indexhttp = line.indexOf("href=") +6;
+                                String newLine = line.substring(indexhttp);
+
+                                int end = newLine.indexOf("\"");
+                                int oEnd = newLine.indexOf("\'");
+
+                               if(oEnd == -1){
+                                   System.out.println(newLine.substring(0,end)); //prints links to dosWindow
+                                   textArea2.append((newLine.substring(0,end))); //appends links to "links" in the layout
+
+                               }else if (end == -1){
+                                   System.out.println(newLine.substring(0,oEnd));
+                                   textArea2.append(newLine.substring(0,oEnd));
+                               }else {
+                                   if(oEnd > end){
+                                        System.out.println(newLine.substring(0,end));
+                                        textArea2.append(newLine.substring(0,oEnd));
+                                   }else{
+                                       System.out.println(newLine.substring(0,oEnd));
+                                       textArea2.append(newLine.substring(0,oEnd));
+                                    }
+                                }
+                                //System.out.println(newLine);
+                            }
+
+                        }
+
+                        reader.close();
+                    } catch(Exception ex) {
+                        System.out.println(ex);
+                    } //end html reader code
             }
+
         }
     }
+
+
 }
 
