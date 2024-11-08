@@ -21,6 +21,7 @@ public class Project implements ActionListener {
     private JTextArea textArea1;
     private JTextArea textArea2;
     private JTextArea textArea3;
+    private JScrollPane scrollPane;
 
 
     public Project() {
@@ -82,6 +83,7 @@ public class Project implements ActionListener {
         textArea1 = new JTextArea("Search term: ");
         textArea2 = new JTextArea("Links: ");
         textArea3 = new JTextArea("URL: ");
+        scrollPane = new JScrollPane(textArea2);
 
         button4.setActionCommand("Button 4");
 
@@ -95,7 +97,7 @@ public class Project implements ActionListener {
         controlPanel.add(textArea3);
         controlPanel.add(button4);
         mainFrame.add(textArea1, BorderLayout.NORTH);
-        controlPanel.add(textArea2);
+        controlPanel.add(scrollPane);
 
         mainFrame.setVisible(true);
     }
@@ -119,12 +121,22 @@ public class Project implements ActionListener {
             if (command.equals("Button 4")) { //start button is clicked
                 System.out.println("Starting ");
 
+                System.out.println(textArea3.getText()); //gets text from textArea3
+                int inputtedurl = textArea3.getText().indexOf(":") + 2;
+                String newUrl = textArea3.getText().substring(inputtedurl);
+
+
+                System.out.println(textArea1.getText()); //gets text from textArea3
+                int inputtedSearchTerm = textArea1.getText().indexOf(":") + 2;
+                String newSearchTerm = textArea1.getText().substring(inputtedSearchTerm);
+                System.out.println(newSearchTerm);
+
                 //html reader code
 
                     try {
                         System.out.println();
                         System.out.print("hello \n");
-                        URL url = new URL("https://www.milton.edu/");
+                        URL url = new URL(newUrl);
                         BufferedReader reader = new BufferedReader(
                                 new InputStreamReader(url.openStream())
                         );
@@ -142,23 +154,39 @@ public class Project implements ActionListener {
                                 int oEnd = newLine.indexOf("\'");
 
                                if(oEnd == -1){
-                                   System.out.println(newLine.substring(0,end)); //prints links to dosWindow
-                                   textArea2.append((newLine.substring(0,end))); //appends links to "links" in the layout
+
+                                   if (newLine.substring(0,end).contains(newSearchTerm)) {
+                                       System.out.println(newLine.substring(0, end)); //prints links to dosWindow
+                                       textArea2.append((newLine.substring(0, end) + "\n")); //appends links to "links" in the layout
+                                   }
 
                                }else if (end == -1){
-                                   System.out.println(newLine.substring(0,oEnd));
-                                   textArea2.append(newLine.substring(0,oEnd));
+
+                                   if (newLine.substring(0,oEnd).contains(newSearchTerm)) {
+                                       System.out.println(newLine.substring(0, oEnd));
+                                       textArea2.append(newLine.substring(0, oEnd) + "\n"); //hidden character makes links print under
+                                   }
+
                                }else {
                                    if(oEnd > end){
-                                        System.out.println(newLine.substring(0,end));
-                                        textArea2.append(newLine.substring(0,oEnd));
+
+                                       if (newLine.substring(0,end).contains(newSearchTerm)) {
+                                           System.out.println(newLine.substring(0, end));
+                                           textArea2.append(newLine.substring(0, end) + "\n");
+                                       }
+
                                    }else{
-                                       System.out.println(newLine.substring(0,oEnd));
-                                       textArea2.append(newLine.substring(0,oEnd));
+
+                                       if (newLine.substring(0,oEnd).contains(newSearchTerm)) {
+                                           System.out.println(newLine.substring(0, oEnd));
+                                           textArea2.append(newLine.substring(0, oEnd) + "\n");
+                                       }
                                     }
                                 }
-                                //System.out.println(newLine);
+
                             }
+
+
 
                         }
 
@@ -167,6 +195,8 @@ public class Project implements ActionListener {
                         System.out.println(ex);
                     } //end html reader code
             }
+
+
 
         }
     }
